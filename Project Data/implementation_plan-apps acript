@@ -1,0 +1,80 @@
+# Implementation Plan: GAS Email Notification Bridge
+
+Set up an automated notification system where every public form submission sends a detailed email and saves data to a Google Sheet.
+
+## User Review Required
+
+> [!IMPORTANT]
+> **Email Destinations**: I'll use `blendedlearningschoolpk@gmail.com` as the primary destination. If you have a second specific email for the Principal, please let me know.
+> - **GAS Script Setup**: I have provided the source code below. You will need to paste this into your [Google Apps Script Editor](https://script.google.com/).
+> - **Permissions**: When deploying the GAS script, you must select "Execute as: Me" and "Who has access: Anyone".
+
+## Proposed Changes
+
+### 1. Google Apps Script (Source Code)
+Copy and paste this into your Google Apps Script project:
+
+```javascript
+/* GAS Code for BLS School - Double Notification Bridge */
+function doPost(e) {
+  try {
+    var data = JSON.parse(e.postData.contents);
+    var type = data.type; // 'admission' or 'inquiry'
+    
+    // Yahan dono (Principal aur Admin) ke emails likhen
+    var recipients = "blendedlearningschoolpk@gmail.com, admin@yourdomain.com"; 
+    
+    var subject = "Digital Packet: New " + (type === 'admission' ? "Admission" : "Inquiry") + " - " + (data.studentName || data.name);
+    var body = "OFFICIAL BLS SCHOOL NOTIFICATION\n";
+    body += "----------------------------------------\n\n";
+    
+    if (type === 'admission') {
+      body += "ROLE ACTION: Admission Review Required\n";
+      body += "STUDENT: " + data.studentName + "\n";
+      body += "FATHER: " + data.fatherName + "\n";
+      body += "PHONE: " + data.parentPhone + "\n";
+      body += "GRADE: " + data.gradeAppliedFor + "\n";
+      body += "TRACKING ID: " + data.id + "\n";
+      body += "REMARKS: " + (data.address || "None") + "\n";
+    } else {
+      body += "ROLE ACTION: Query Response Required\n";
+      body += "SENDER: " + data.name + "\n";
+      body += "EMAIL: " + data.email + "\n";
+      body += "MESSAGE: " + data.message + "\n";
+      body += "TRACKING ID: " + data.id + "\n";
+    }
+    
+    body += "\nTIMESTAMP: " + new Date().toLocaleString() + "\n";
+    body += "----------------------------------------";
+
+    // 1. Send Email to BOTH simultaneously
+    MailApp.sendEmail(recipients, subject, body);
+    
+    // 2. Mirror to Spreadsheet
+    var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+    sheet.appendRow([new Date(), type, (data.studentName || data.name), data.id, "SENT TO BOTH"]);
+
+    return ContentService.createTextOutput(JSON.stringify({"status": "broadcast_complete"}))
+      .setMimeType(ContentService.MimeType.JSON);
+  } catch (err) {
+    return ContentService.createTextOutput(JSON.stringify({"status": "error", "message": err.toString()}))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
+```
+
+### 2. LMS API Integration
+Trigger the notification bridge from the app.
+
+#### [MODIFY] [api.ts](file:///e:/blsschool-main%20-%20Copy/src/lib/api.ts)
+- Update `createAdmission` and `createInquiry` to send a POST request to the GAS URL with the metadata (type and form fields) after the local database save is successful.
+
+#### [MODIFY] [.env](file:///e:/blsschool-main%20-%20Copy/.env)
+- Add `VITE_GAS_URL=""` for the user to paste their deployed URL.
+
+## Verification Plan
+
+### Manual Verification
+- Submit an Admission form -> Check Principal's Gmail for the detailed packet.
+- Submit a Contact Inquiry -> Check Admin's Gmail for the message details.
+- Verify that the Tracking ID in the email matches the one shown on the website.

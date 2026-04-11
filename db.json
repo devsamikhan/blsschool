@@ -1,0 +1,60 @@
+{
+  "users": [
+    {
+      "id": "admin-1",
+      "name": "Muhammad Ali",
+      "role": "admin",
+      "schoolId": "ADMIN-001",
+      "password": "admin123",
+      "email": "admin@bls.edu",
+      "phone": "03001234567",
+      "address": "Lahore Head Office",
+      "classId": "",
+      "subjects": [],
+      "profilePic": "",
+      "status": "active",
+      "createdAt": "2025-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "principal-1",
+      "name": "Prof. Ahmad Hassan",
+      "role": "principal",
+      "schoolId": "PRIN-H4K8J1",
+      "password": "welcome123",
+      "email": "principal@isakhel.edu",
+      "phone": "0312-9988771",
+      "address": "Main Campus Residence",
+      "classId": "",
+      "subjects": [],
+      "status": "active",
+      "createdAt": "2026-03-17T05:28:14.134Z"
+    },
+    {
+      "id": "accountant-1",
+      "name": "Saeed Khan",
+      "role": "accountant",
+      "schoolId": "ACC-L9P2M4",
+      "password": "welcome123",
+      "email": "finance@isakhel.edu",
+      "phone": "0321-4433221",
+      "address": "Isakhel Town",
+      "classId": "",
+      "subjects": [],
+      "status": "active",
+      "createdAt": "2026-03-18T05:00:00.000Z"
+    }
+  ],
+  "classes": [],
+  "homework": [],
+  "submissions": [],
+  "teacherClasses": [],
+  "feeRecords": [],
+  "expenses": [],
+  "announcements": [],
+  "attendance": [],
+  "examResults": [],
+  "admissions": [],
+  "contactInquiries": [],
+  "inventory": [],
+  "news": []
+}

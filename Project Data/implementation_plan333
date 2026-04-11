@@ -1,0 +1,67 @@
+# LMS Logic & Permissions Upgrade Plan
+
+This plan outlines the technical changes to restrict Admin role creation, expand Principal and Teacher management capabilities, implement a marking system, and fix the universal report's print alignment.
+
+## User Review Required
+
+> [!IMPORTANT]
+> - **Admin Restriction**: Admins will no longer be able to create other Admins. Only the initial system setup or manual database intervention will allow new Admin creation.
+> - **Teacher-Led Result Submission**: Teachers will now have a dedicated interface to enter marks for their entire class at once. These results will be instantly visible to the Principal.
+> - **Shared Management**: Management of students and classes will now be shared between Admin, Principal, and (for students) Teachers.
+
+## Proposed Changes
+
+### 🛡️ Admin & Role Logic
+---
+#### [MODIFY] [UserManagement.tsx](file:///e:/blsschool-main%20-%20Copy/src/pages/admin/UserManagement.tsx)
+- Filter the `ROLES` array in the "Add User" modal to exclude 'admin' so an Admin cannot create another Admin account.
+
+### 🏛️ Principal Portal Expansion
+---
+#### [MODIFY] [PrincipalTeachers.tsx](file:///e:/blsschool-main%20-%20Copy/src/pages/principal/PrincipalTeachers.tsx)
+- Add an "Add New Teacher" button that opens a user creation modal pre-filled with the 'teacher' role.
+
+#### [MODIFY] [PrincipalStudents.tsx](file:///e:/blsschool-main%20-%20Copy/src/pages/principal/PrincipalStudents.tsx)
+- Add an "Add New Student" button that opens a user creation modal pre-filled with the 'student' role.
+
+#### [MODIFY] [PrincipalClasses.tsx](file:///e:/blsschool-main%20-%20Copy/src/pages/principal/PrincipalClasses.tsx)
+- Add an "Add New Class" button and modal to allow the Principal to create classes and sections.
+
+### 🍎 Teacher Portal Expansion & Result System
+---
+#### [MODIFY] [TeacherDashboard.tsx](file:///e:/blsschool-main%20-%20Copy/src/pages/teacher/TeacherDashboard.tsx)
+- Add navigation links to "Manage Class Students" and "Entry Examination Marks".
+
+#### [NEW] [TeacherResultsEntry.tsx](file:///e:/blsschool-main%20-%20Copy/src/pages/teacher/TeacherResultsEntry.tsx)
+- A new page allowing teachers to:
+  - Select one of their assigned classes.
+  - Enter marks (Obtained/Total) for all students in that class for a specific subject/exam.
+  - Calculate grades and standing (PROMOTED/HELD) automatically.
+  - "Post" results to the database (`/examResults`).
+
+### 📄 Universal Report Layout Fix
+---
+#### [MODIFY] [ReportTemplate.tsx](file:///e:/blsschool-main%20-%20Copy/src/components/reports/ReportTemplate.tsx)
+- Implement `@media print` CSS fixes:
+  - Force `a4-sheet` to match physical A4 dimensions exactly (`210mm` x `297mm`).
+  - Adjust margins and background watermark opacity for better print clarity.
+  - Ensure zero padding/margin on the `body` during print.
+
+## Verification Plan
+
+### Automated Tests
+- No automated tests currently exist for role logic. I will verify via browser testing.
+
+### Manual Verification
+1. **Admin Login**:
+   - Try to add a new user. Verify "Admin" is NOT an option in the Role dropdown.
+2. **Principal Login**:
+   - Navigate to Teachers/Students/Classes. Verify "Add" buttons exist and work.
+3. **Teacher Login**:
+   - Navigate to the new Marks Entry page.
+   - Enter marks for a student and save.
+   - Switch to Principal portal and verify the result appears in `Academic Transcripts`.
+4. **Print Test**:
+   - Open any report (e.g., student result).
+   - Click "Verified Print".
+   - Verify in the Print Preview that the layout is perfectly aligned to the A4 sheet.

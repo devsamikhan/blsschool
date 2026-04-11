@@ -1,0 +1,1271 @@
+# Complete Prompt for AI to Build the Blended Learning School (BLS) Management System
+
+---
+
+## Prompt:
+
+Build me a complete, production-ready School Management System called **"Blended Learning School (BLS)"** from scratch using the following tech stack and specifications. Implement every single feature described below with full functionality, proper UI/UX, and clean code architecture. Do not skip any feature. Do not use placeholder or dummy data where real logic is needed. Every button, every form, every page must be fully functional.
+
+---
+
+## Tech Stack
+
+- **Frontend:** React 18 + TypeScript + Vite
+- **UI Library:** shadcn/ui + Tailwind CSS
+- **State Management:** React Context API for authentication + local component state
+- **Backend (Development):** JSON Server running on port 3001
+- **Real-time Updates:** Custom window event system for cross-component communication
+- **Routing:** React Router v6 with protected routes
+- **Storage:** JSON Server as database (db.json file), localStorage only for auth persistence
+
+---
+
+## Project Folder Structure
+
+Create the project with this exact folder structure:
+
+```
+blsschool-main/
+├── public/
+│   └── favicon.ico
+├── src/
+│   ├── components/
+│   │   ├── ui/                    (all shadcn/ui components)
+│   │   ├── layout/
+│   │   │   ├── DashboardLayout.tsx
+│   │   │   ├── Sidebar.tsx
+│   │   │   └── Header.tsx
+│   │   ├── Navbar.tsx
+│   │   ├── ProtectedRoute.tsx
+│   │   └── RequireAuth.tsx
+│   ├── contexts/
+│   │   └── AuthContext.tsx
+│   ├── pages/
+│   │   ├── public/
+│   │   │   ├── Home.tsx
+│   │   │   ├── About.tsx
+│   │   │   ├── Contact.tsx
+│   │   │   └── NotFound.tsx
+│   │   ├── auth/
+│   │   │   └── Login.tsx
+│   │   ├── admin/
+│   │   │   ├── AdminDashboard.tsx
+│   │   │   ├── UserManagement.tsx
+│   │   │   ├── ClassManagement.tsx
+│   │   │   ├── TeacherAssignment.tsx
+│   │   │   └── AdminSettings.tsx
+│   │   ├── teacher/
+│   │   │   ├── TeacherDashboard.tsx
+│   │   │   ├── TeacherHomeworkCreate.tsx
+│   │   │   ├── TeacherHomeworkList.tsx
+│   │   │   ├── TeacherHomeworkDetail.tsx
+│   │   │   ├── TeacherAnnouncements.tsx
+│   │   │   └── TeacherAttendance.tsx
+│   │   ├── student/
+│   │   │   ├── StudentDashboard.tsx
+│   │   │   ├── StudentHomework.tsx
+│   │   │   ├── StudentHomeworkDetail.tsx
+│   │   │   ├── StudentAnnouncements.tsx
+│   │   │   └── StudentFeeStatus.tsx
+│   │   ├── principal/
+│   │   │   ├── PrincipalDashboard.tsx
+│   │   │   ├── PrincipalClasses.tsx
+│   │   │   ├── PrincipalTeachers.tsx
+│   │   │   ├── PrincipalStudents.tsx
+│   │   │   ├── PrincipalAnnouncements.tsx
+│   │   │   └── PrincipalReports.tsx
+│   │   └── accountant/
+│   │       ├── AccountantDashboard.tsx
+│   │       ├── FeesManagement.tsx
+│   │       ├── ExpensesManagement.tsx
+│   │       └── FinancialReports.tsx
+│   ├── lib/
+│   │   ├── api.ts
+│   │   ├── events.ts
+│   │   ├── utils.ts
+│   │   └── constants.ts
+│   ├── types/
+│   │   └── index.ts
+│   ├── data/
+│   │   └── initialData.ts
+│   ├── hooks/
+│   │   ├── useAuth.ts
+│   │   └── useApi.ts
+│   ├── App.tsx
+│   ├── main.tsx
+│   └── index.css
+├── db.json
+├── package.json
+├── tsconfig.json
+├── tailwind.config.js
+├── vite.config.ts
+└── README.md
+```
+
+---
+
+## Database Schema (db.json)
+
+Create the `db.json` file with this exact structure and include initial seed data with at least 1 admin, 2 teachers, 5 students, 1 principal, and 1 accountant:
+
+```json
+{
+  "users": [
+    {
+      "id": "1",
+      "name": "Admin User",
+      "role": "admin",
+      "schoolId": "ADMIN001",
+      "password": "admin123",
+      "email": "admin@bls.edu",
+      "phone": "03001234567",
+      "address": "Lahore",
+      "classId": "",
+      "subjects": [],
+      "profilePic": "",
+      "status": "active",
+      "createdAt": "2025-01-01T00:00:00.000Z"
+    }
+  ],
+  "classes": [
+    {
+      "id": "1",
+      "name": "Nursery",
+      "section": "A",
+      "studentIds": [],
+      "maxStudents": 30,
+      "createdAt": "2025-01-01T00:00:00.000Z"
+    }
+  ],
+  "homework": [
+    {
+      "id": "1",
+      "title": "",
+      "subject": "",
+      "description": "",
+      "classId": "",
+      "dueDate": "",
+      "createdBy": "",
+      "teacherName": "",
+      "attachments": [],
+      "status": "active",
+      "createdAt": ""
+    }
+  ],
+  "submissions": [
+    {
+      "id": "1",
+      "homeworkId": "",
+      "studentId": "",
+      "studentName": "",
+      "submissionText": "",
+      "attachments": [],
+      "submittedAt": "",
+      "status": "pending",
+      "marks": null,
+      "totalMarks": null,
+      "feedback": "",
+      "checkedAt": "",
+      "checkedBy": ""
+    }
+  ],
+  "teacherClasses": [
+    {
+      "id": "1",
+      "teacherId": "",
+      "classId": "",
+      "subject": ""
+    }
+  ],
+  "feeRecords": [
+    {
+      "id": "1",
+      "studentId": "",
+      "studentName": "",
+      "classId": "",
+      "className": "",
+      "feeType": "monthly",
+      "totalFee": 0,
+      "paid": 0,
+      "balance": 0,
+      "dueDate": "",
+      "status": "pending",
+      "month": "",
+      "year": "",
+      "payments": [
+        {
+          "amount": 0,
+          "date": "",
+          "method": "cash",
+          "receiptNo": "",
+          "receivedBy": ""
+        }
+      ],
+      "createdAt": ""
+    }
+  ],
+  "expenses": [
+    {
+      "id": "1",
+      "date": "",
+      "category": "",
+      "amount": 0,
+      "description": "",
+      "paidTo": "",
+      "paymentMethod": "cash",
+      "receiptNo": "",
+      "approvedBy": "",
+      "createdAt": ""
+    }
+  ],
+  "announcements": [
+    {
+      "id": "1",
+      "title": "",
+      "message": "",
+      "type": "general",
+      "priority": "normal",
+      "targetRoles": ["all"],
+      "targetClasses": [],
+      "createdBy": "",
+      "createdByName": "",
+      "createdByRole": "",
+      "isActive": true,
+      "createdAt": "",
+      "expiresAt": ""
+    }
+  ],
+  "attendance": [
+    {
+      "id": "1",
+      "classId": "",
+      "date": "",
+      "records": [
+        {
+          "studentId": "",
+          "studentName": "",
+          "status": "present"
+        }
+      ],
+      "markedBy": "",
+      "createdAt": ""
+    }
+  ]
+}
+```
+
+---
+
+## TypeScript Types (src/types/index.ts)
+
+Define all these types:
+
+```typescript
+export type UserRole = 'admin' | 'teacher' | 'student' | 'principal' | 'accountant';
+
+export interface User {
+  id: string;
+  name: string;
+  role: UserRole;
+  schoolId: string;
+  password: string;
+  email: string;
+  phone: string;
+  address: string;
+  classId: string;
+  subjects: string[];
+  profilePic: string;
+  status: 'active' | 'inactive';
+  createdAt: string;
+}
+
+export interface Class {
+  id: string;
+  name: string;
+  section: string;
+  studentIds: string[];
+  maxStudents: number;
+  createdAt: string;
+}
+
+export interface Homework {
+  id: string;
+  title: string;
+  subject: string;
+  description: string;
+  classId: string;
+  dueDate: string;
+  createdBy: string;
+  teacherName: string;
+  attachments: string[];
+  status: 'active' | 'closed';
+  createdAt: string;
+}
+
+export interface Submission {
+  id: string;
+  homeworkId: string;
+  studentId: string;
+  studentName: string;
+  submissionText: string;
+  attachments: string[];
+  submittedAt: string;
+  status: 'pending' | 'checked' | 'returned';
+  marks: number | null;
+  totalMarks: number | null;
+  feedback: string;
+  checkedAt: string;
+  checkedBy: string;
+}
+
+export interface TeacherClass {
+  id: string;
+  teacherId: string;
+  classId: string;
+  subject: string;
+}
+
+export interface FeeRecord {
+  id: string;
+  studentId: string;
+  studentName: string;
+  classId: string;
+  className: string;
+  feeType: 'monthly' | 'quarterly' | 'annual' | 'admission' | 'exam' | 'transport';
+  totalFee: number;
+  paid: number;
+  balance: number;
+  dueDate: string;
+  status: 'paid' | 'partial' | 'pending' | 'overdue';
+  month: string;
+  year: string;
+  payments: Payment[];
+  createdAt: string;
+}
+
+export interface Payment {
+  amount: number;
+  date: string;
+  method: 'cash' | 'bank' | 'online' | 'cheque';
+  receiptNo: string;
+  receivedBy: string;
+}
+
+export interface Expense {
+  id: string;
+  date: string;
+  category: 'salary' | 'electricity' | 'water' | 'maintenance' | 'supplies' | 'transport' | 'events' | 'other';
+  amount: number;
+  description: string;
+  paidTo: string;
+  paymentMethod: 'cash' | 'bank' | 'online' | 'cheque';
+  receiptNo: string;
+  approvedBy: string;
+  createdAt: string;
+}
+
+export interface Announcement {
+  id: string;
+  title: string;
+  message: string;
+  type: 'general' | 'urgent' | 'holiday' | 'event' | 'exam';
+  priority: 'low' | 'normal' | 'high';
+  targetRoles: string[];
+  targetClasses: string[];
+  createdBy: string;
+  createdByName: string;
+  createdByRole: string;
+  isActive: boolean;
+  createdAt: string;
+  expiresAt: string;
+}
+
+export interface AttendanceRecord {
+  id: string;
+  classId: string;
+  date: string;
+  records: StudentAttendance[];
+  markedBy: string;
+  createdAt: string;
+}
+
+export interface StudentAttendance {
+  studentId: string;
+  studentName: string;
+  status: 'present' | 'absent' | 'late' | 'leave';
+}
+```
+
+---
+
+## API Layer (src/lib/api.ts)
+
+Create a complete API abstraction layer with these functions. Every function must make actual HTTP calls to JSON Server at `http://localhost:3001`:
+
+```typescript
+const API_BASE = 'http://localhost:3001';
+
+// Users API
+getAllUsers()
+getUserById(id: string)
+getUsersByRole(role: string)
+createUser(user: Omit<User, 'id'>)
+updateUser(id: string, data: Partial<User>)
+deleteUser(id: string)
+loginUser(schoolId: string, password: string)
+
+// Classes API
+getAllClasses()
+getClassById(id: string)
+createClass(classData: Omit<Class, 'id'>)
+updateClass(id: string, data: Partial<Class>)
+deleteClass(id: string)
+
+// Homework API
+getAllHomework()
+getHomeworkById(id: string)
+getHomeworkByClass(classId: string)
+getHomeworkByTeacher(teacherId: string)
+createHomework(homework: Omit<Homework, 'id'>)
+updateHomework(id: string, data: Partial<Homework>)
+deleteHomework(id: string)
+
+// Submissions API
+getAllSubmissions()
+getSubmissionsByHomework(homeworkId: string)
+getSubmissionsByStudent(studentId: string)
+getSubmissionByHomeworkAndStudent(homeworkId: string, studentId: string)
+createSubmission(submission: Omit<Submission, 'id'>)
+updateSubmission(id: string, data: Partial<Submission>)
+
+// Teacher Classes API
+getTeacherClasses(teacherId: string)
+getClassTeachers(classId: string)
+assignTeacherToClass(data: Omit<TeacherClass, 'id'>)
+removeTeacherFromClass(id: string)
+getAllTeacherClasses()
+
+// Fee Records API
+getAllFeeRecords()
+getFeeRecordsByStudent(studentId: string)
+getFeeRecordsByClass(classId: string)
+createFeeRecord(record: Omit<FeeRecord, 'id'>)
+updateFeeRecord(id: string, data: Partial<FeeRecord>)
+deleteFeeRecord(id: string)
+
+// Expenses API
+getAllExpenses()
+createExpense(expense: Omit<Expense, 'id'>)
+updateExpense(id: string, data: Partial<Expense>)
+deleteExpense(id: string)
+
+// Announcements API
+getAllAnnouncements()
+getAnnouncementsByRole(role: string)
+createAnnouncement(announcement: Omit<Announcement, 'id'>)
+updateAnnouncement(id: string, data: Partial<Announcement>)
+deleteAnnouncement(id: string)
+
+// Attendance API
+getAllAttendance()
+getAttendanceByClass(classId: string)
+getAttendanceByDate(date: string)
+createAttendance(record: Omit<AttendanceRecord, 'id'>)
+updateAttendance(id: string, data: Partial<AttendanceRecord>)
+```
+
+---
+
+## Event System (src/lib/events.ts)
+
+Create a custom event system for real-time cross-component updates:
+
+```typescript
+export const EVENTS = {
+  HOMEWORK_CHANGE: 'homework-storage-change',
+  SUBMISSION_CHANGE: 'submission-storage-change',
+  USER_CHANGE: 'user-storage-change',
+  CLASS_CHANGE: 'class-storage-change',
+  ANNOUNCEMENT_CHANGE: 'announcement-storage-change',
+  FEE_CHANGE: 'fee-storage-change',
+  ATTENDANCE_CHANGE: 'attendance-storage-change',
+};
+
+export function dispatchCustomEvent(eventName: string) {
+  window.dispatchEvent(new Event(eventName));
+  console.log(`[Event Dispatched]: ${eventName}`);
+}
+
+export function useEventListener(eventName: string, callback: () => void) {
+  // React hook that listens for custom events and calls callback
+  // Must cleanup on unmount
+}
+```
+
+---
+
+## Authentication System (src/contexts/AuthContext.tsx)
+
+Build a complete authentication context with:
+
+1. **Login function** that takes schoolId and password, calls the API to find matching user, and stores user in state + localStorage
+2. **Logout function** that clears state and localStorage
+3. **getCurrentUser** that returns the logged-in user object
+4. **isAuthenticated** boolean
+5. **Persist auth** across page refreshes using localStorage
+6. **Auto-redirect** based on role after login:
+   - admin → /admin/dashboard
+   - teacher → /teacher/dashboard
+   - student → /student/dashboard
+   - principal → /principal/dashboard
+   - accountant → /accountant/dashboard
+
+---
+
+## Protected Route Component
+
+Create `RequireAuth.tsx` that:
+1. Checks if user is logged in
+2. Checks if user has the required role
+3. If not logged in → redirect to /login
+4. If wrong role → redirect to their correct dashboard
+5. If authorized → render children
+
+---
+
+## Public Pages
+
+### Home Page (/)
+- Hero section with school name "Blended Learning School" and tagline
+- Features section showing what the system offers
+- Call to action button to login
+- Beautiful modern design with gradient backgrounds
+
+### About Page (/about)
+- School description
+- Mission and vision
+- Statistics (students, teachers, classes)
+
+### Contact Page (/contact)
+- Contact form (name, email, message)
+- School address and phone number
+- Map placeholder
+
+### Login Page (/login)
+- School ID input field
+- Password input field
+- Login button
+- Error message display for wrong credentials
+- Loading state during authentication
+- Redirect to appropriate dashboard after successful login
+
+---
+
+## ADMIN MODULE (Complete Implementation)
+
+### Admin Dashboard (/admin/dashboard)
+
+**Layout:**
+- Sidebar with navigation links: Dashboard, Manage Users, Manage Classes, Teacher Assignment, Settings
+- Header with admin name, notification bell, logout button
+
+**Dashboard Content:**
+- **Statistics Cards Row:**
+  - Total Students (count from API)
+  - Total Teachers (count from API)
+  - Total Classes (count from API)
+  - Pending Fee Collections (count from API)
+
+- **Quick Action Buttons:**
+  - Add New User → navigates to user management
+  - Add New Class → navigates to class management
+  - Assign Teachers → navigates to teacher assignment
+  - View Reports → navigates to reports
+
+- **Recent Activity Section:**
+  - Last 5 users created
+  - Last 5 homework assigned
+
+- **Charts/Visual:**
+  - Student distribution by class (bar chart or cards)
+  - Role distribution pie chart (show counts)
+
+### User Management (/admin/users)
+
+**Features:**
+1. **User List Table** with columns: School ID, Name, Role, Email, Phone, Class (for students), Status, Actions
+2. **Search bar** to filter users by name or school ID
+3. **Filter dropdown** to filter by role (All, Admin, Teacher, Student, Principal, Accountant)
+4. **Add New User Button** that opens a modal/dialog with form:
+   - Name (required)
+   - Role selection dropdown (required)
+   - Email (required)
+   - Phone (required)
+   - Address
+   - Class selection (shown only when role is "student" - dropdown of all classes)
+   - Subjects (shown only when role is "teacher" - multi-select: Math, English, Urdu, Science, Islamiat, Computer, Social Studies, Art)
+   - Password (auto-generated or manual)
+   - **Auto-generate School ID** based on role:
+     - Admin: ADMIN001, ADMIN002...
+     - Teacher: TCH001, TCH002...
+     - Student: STU001, STU002...
+     - Principal: PRIN001, PRIN002...
+     - Accountant: ACC001, ACC002...
+   - Show generated School ID and password after creation (copyable)
+
+5. **Edit User** - click edit icon → opens pre-filled form modal → save changes
+6. **Delete User** - click delete icon → confirmation dialog → delete from API
+7. **Toggle Status** - active/inactive toggle for each user
+8. When a student is created with a classId, automatically add that student's ID to the class's studentIds array
+
+### Class Management (/admin/classes)
+
+**Features:**
+1. **Class Cards Grid** showing each class with: Name, Section, Student Count, Max Students, Created Date
+2. **Add New Class Button** → modal with:
+   - Class Name dropdown: Nursery, KG, Prep, 1st, 2nd, 3rd, 4th, 5th, 6th, 7th, 8th
+   - Section: A, B, C
+   - Max Students: number input (default 30)
+3. **Edit Class** - click edit → modal with pre-filled data
+4. **Delete Class** - click delete → confirmation → check if students exist in class → warn if yes → delete
+5. **View Students** - click on class card → shows list of students in that class
+6. **Class Detail View** showing:
+   - Assigned teachers with subjects
+   - Student list with basic info
+   - Homework count for this class
+
+### Teacher Assignment (/admin/teacher-assignment)
+
+**Features:**
+1. **Teacher List** - shows all teachers with their current class assignments
+2. **Assignment Interface:**
+   - Select a teacher from dropdown
+   - Show all available classes with checkboxes
+   - For each checked class, select the subject the teacher will teach
+   - Save button to create teacherClasses records
+3. **Current Assignments Table:**
+   - Teacher Name | Class | Subject | Action (Remove)
+4. **Bulk Assignment** - assign one teacher to multiple classes at once
+5. When assignment changes, dispatch CLASS_CHANGE and USER_CHANGE events
+
+### Admin Settings (/admin/settings)
+
+- Change admin password
+- School information (name, address, phone, email, logo)
+- Academic year settings
+- Fee structure template
+
+---
+
+## TEACHER MODULE (Complete Implementation)
+
+### Teacher Dashboard (/teacher/dashboard)
+
+**Layout:**
+- Sidebar: Dashboard, Create Homework, My Homework, Attendance, Announcements
+- Header with teacher name, notification count, logout
+
+**Dashboard Content:**
+- **Welcome Card:** "Welcome back, [Teacher Name]!" with today's date
+- **Statistics Row:**
+  - My Classes (count of assigned classes)
+  - Total Homework Given (count)
+  - Pending Submissions (submissions with status "pending")
+  - Checked Today (submissions checked today)
+
+- **My Classes Section:**
+  - Cards for each assigned class showing: Class Name, Subject, Student Count
+  - Only show classes assigned to this teacher via teacherClasses
+
+- **Recent Homework Section:**
+  - Last 5 homework created by this teacher
+  - Each shows: Title, Class, Subject, Due Date, Submission Count / Total Students
+
+- **Quick Actions:**
+  - Create New Homework button
+  - View All Homework button
+  - Mark Attendance button
+
+### Create Homework (/teacher/homework/create)
+
+**Form Fields:**
+1. Title (required, text input)
+2. Subject (dropdown - populated from teacher's assigned subjects for selected class)
+3. Class (dropdown - only shows classes assigned to this teacher)
+4. Due Date (date picker - must be future date)
+5. Total Marks (number input)
+6. Description (rich textarea with formatting)
+7. Attachments (file input - store filename only for now)
+8. Submit button → creates homework in API → dispatches HOMEWORK_CHANGE event → redirects to homework list
+9. Show success toast notification after creation
+
+### My Homework List (/teacher/homework)
+
+**Features:**
+1. **Homework Cards/Table** showing all homework created by this teacher
+2. Each card shows:
+   - Title
+   - Class Name (fetched from classes API)
+   - Subject
+   - Due Date (with color coding: green if future, red if past)
+   - Submissions: X/Y (submitted count / total students in class)
+   - Status badge (active/closed)
+3. **Filter by:**
+   - Class (dropdown of assigned classes)
+   - Status (All, Active, Closed)
+   - Date range
+4. **Search** by homework title
+5. **Click on homework** → navigates to homework detail page
+6. **Delete homework** button with confirmation
+7. **Real-time update**: Listen for SUBMISSION_CHANGE event and refresh submission counts
+
+### Homework Detail (/teacher/homework/:id)
+
+**Features:**
+1. **Homework Info Card:**
+   - Title, Subject, Class, Due Date, Description
+   - Total Submissions / Total Students progress bar
+   
+2. **Submissions Table:**
+   - Student Name | School ID | Submitted At | Status | Marks | Action
+   - Status badges: Pending (yellow), Checked (green), Returned (red)
+   
+3. **Check Submission Action:**
+   - Click "Check" button on a submission
+   - Opens a panel/modal showing:
+     - Student's submission text
+     - Student's attachments
+     - Marks input (number, max = totalMarks of homework)
+     - Feedback textarea
+     - Status dropdown: Checked / Returned
+     - Save button → updates submission via API → dispatches SUBMISSION_CHANGE event
+   
+4. **Bulk Actions:**
+   - Select multiple submissions
+   - Mark all as checked with same marks
+
+5. **Students who haven't submitted** - show list of students in the class who haven't submitted yet
+
+6. **Real-time**: Listen for SUBMISSION_CHANGE event and refresh data
+
+### Teacher Attendance (/teacher/attendance)
+
+**Features:**
+1. **Select Class** dropdown (only assigned classes)
+2. **Select Date** (date picker, default today)
+3. **Student List** for selected class:
+   - Student Name | School ID | Status (Present/Absent/Late/Leave radio buttons)
+   - Default all to "Present"
+4. **Mark All Present** / **Mark All Absent** quick buttons
+5. **Save Attendance** button → creates attendance record in API → dispatches ATTENDANCE_CHANGE event
+6. **View Previous Attendance:**
+   - Calendar view showing which days attendance was marked
+   - Click on a date → shows that day's attendance
+   - Edit previous attendance (within 7 days only)
+7. **Attendance Summary:**
+   - Per student: Total Present / Total Days = Percentage
+   - Show students with attendance below 75% in red
+
+### Teacher Announcements (/teacher/announcements)
+
+**Features:**
+1. **View Announcements** - see all announcements targeted to teachers or "all"
+2. **Create Announcement:**
+   - Title
+   - Message (textarea)
+   - Type: General, Homework Related, Class Notice
+   - Target: My Classes (select which classes)
+   - Priority: Normal, High
+   - Save → creates announcement → dispatches ANNOUNCEMENT_CHANGE event
+3. **My Announcements** tab showing announcements created by this teacher
+4. **Delete** own announcements
+
+---
+
+## STUDENT MODULE (Complete Implementation)
+
+### Student Dashboard (/student/dashboard)
+
+**Layout:**
+- Sidebar: Dashboard, My Homework, Announcements, Fee Status
+- Header with student name, class info, logout
+
+**Dashboard Content:**
+- **Welcome Card:** "Welcome, [Student Name]!" with Class info (e.g., "Class: 5th - Section A")
+- **Statistics Row:**
+  - Total Homework (for their class)
+  - Submitted (count of their submissions)
+  - Pending (homework they haven't submitted)
+  - Average Marks (average of checked submissions)
+
+- **Recent Homework Section:**
+  - Last 5 homework for their class
+  - Each shows: Title, Subject, Due Date, Status (Pending/Submitted/Checked)
+  - Color coded: Pending (yellow), Submitted (blue), Checked (green), Overdue (red)
+
+- **Announcements Preview:**
+  - Last 3 announcements for their class or role
+
+- **Quick Actions:**
+  - View All Homework
+  - View Announcements
+  - Check Fee Status
+
+### Student Homework (/student/homework)
+
+**Features:**
+1. **Homework List** - shows ALL homework assigned to student's class
+2. Each homework card shows:
+   - Title, Subject, Teacher Name, Due Date
+   - Status: 
+     - "Pending" if not submitted and not past due
+     - "Overdue" if not submitted and past due
+     - "Submitted" if submitted but not checked
+     - "Checked" if teacher has checked with marks and feedback
+   - Marks (if checked): "85/100"
+3. **Filter by:**
+   - Status (All, Pending, Submitted, Checked, Overdue)
+   - Subject
+4. **Search** by title
+5. **Click on homework** → navigates to homework detail
+
+### Student Homework Detail (/student/homework/:id)
+
+**Features:**
+1. **Homework Info:**
+   - Title, Subject, Teacher Name, Due Date, Description, Total Marks
+   
+2. **If not submitted:**
+   - Submission form:
+     - Text area for answer/response
+     - File upload input (store filename)
+     - Submit button → creates submission → dispatches SUBMISSION_CHANGE event
+     - Confirmation dialog before submit
+   
+3. **If already submitted:**
+   - Show submitted text and attachments
+   - Show submission date
+   - If status is "pending": "Waiting for teacher to check..."
+   - If status is "checked": Show marks, total marks, percentage, feedback from teacher
+   - If status is "returned": Show feedback, allow resubmission
+   
+4. **Real-time**: Listen for SUBMISSION_CHANGE event to immediately show marks when teacher checks
+
+### Student Announcements (/student/announcements)
+
+- View all announcements targeted to "all", "student" role, or student's specific class
+- Filter by type (General, Urgent, Holiday, Event, Exam)
+- Announcements sorted by date (newest first)
+- Urgent announcements highlighted with red border
+- Each announcement shows: Title, Message, Type badge, Date, Posted by
+
+### Student Fee Status (/student/fee-status)
+
+- View all fee records for this student
+- Show: Month, Fee Type, Total Amount, Paid Amount, Balance, Status, Due Date
+- Status badges: Paid (green), Partial (yellow), Pending (orange), Overdue (red)
+- Payment history for each fee record
+- Total summary: Total Fees, Total Paid, Total Outstanding
+
+---
+
+## PRINCIPAL MODULE (Complete Implementation)
+
+### Principal Dashboard (/principal/dashboard)
+
+**Layout:**
+- Sidebar: Dashboard, Classes, Teachers, Students, Announcements, Reports
+- Header with principal name, logout
+
+**Dashboard Content:**
+- **Statistics Cards:**
+  - Total Students (real count from API)
+  - Total Teachers (real count from API)
+  - Total Classes (real count from API)
+  - Fee Collection This Month (sum from API)
+  - Pending Homework Submissions (real count)
+  - Today's Attendance Percentage
+
+- **Overview Cards:**
+  - Recent Enrollments (last 5 students added)
+  - Teacher Activity (who gave homework recently)
+  - Fee Collection Summary (collected vs pending this month)
+
+- **Quick Actions:**
+  - View All Classes, View All Teachers, Create Announcement, View Reports
+
+### Principal Classes (/principal/classes)
+
+- View all classes with: Class Name, Section, Student Count, Assigned Teachers, Homework Count
+- Click on class → detailed view showing:
+  - All students in the class with names and IDs
+  - All teachers assigned with subjects
+  - All homework for the class with submission stats
+  - Attendance summary for the class
+
+### Principal Teachers (/principal/teachers)
+
+- View all teachers with: Name, School ID, Email, Phone, Assigned Classes, Subjects
+- Click on teacher → detailed view showing:
+  - Teacher's assigned classes and subjects
+  - Homework given by this teacher
+  - Submission checking statistics (how many checked, average marks given)
+
+### Principal Students (/principal/students)
+
+- View all students with: Name, School ID, Class, Email, Phone, Fee Status
+- Filter by class
+- Search by name or school ID
+- Click on student → detailed view showing:
+  - Student info
+  - Homework submission history
+  - Attendance record
+  - Fee payment history
+
+### Principal Announcements (/principal/announcements)
+
+- View all announcements in the system
+- Create new announcements targeted to:
+  - All users
+  - Specific roles
+  - Specific classes
+- Types: General, Urgent, Holiday, Event, Exam
+- Priority: Low, Normal, High
+- Set expiry date
+- Delete any announcement
+
+### Principal Reports (/principal/reports)
+
+**Generate these reports with real data from API:**
+
+1. **Student Report:**
+   - Total students per class
+   - New enrollments this month
+   - Student-teacher ratio
+
+2. **Homework Report:**
+   - Total homework given per class
+   - Submission rate per class (percentage)
+   - Average marks per class
+   - Teachers who gave most homework
+
+3. **Attendance Report:**
+   - Overall attendance percentage
+   - Class-wise attendance
+   - Students with low attendance (below 75%)
+   - Monthly attendance trend
+
+4. **Fee Report:**
+   - Total fee collected this month/year
+   - Pending fee amount
+   - Class-wise fee collection
+   - Students with overdue fees
+
+5. Each report should have a summary view with numbers and a detailed table view
+
+---
+
+## ACCOUNTANT MODULE (Complete Implementation)
+
+### Accountant Dashboard (/accountant/dashboard)
+
+**Layout:**
+- Sidebar: Dashboard, Manage Fees, Expenses, Reports
+- Header with accountant name, logout
+
+**Dashboard Content:**
+- **Financial Summary Cards:**
+  - Total Fee Collected (this month)
+  - Total Fee Pending
+  - Total Expenses (this month)
+  - Net Balance (collected - expenses)
+
+- **Monthly Collection Chart:**
+  - Show fee collection vs expenses for current month
+
+- **Recent Transactions:**
+  - Last 10 fee payments received
+  - Last 10 expenses recorded
+
+- **Alerts:**
+  - Number of overdue fee payments
+  - Students with pending fees for more than 2 months
+
+- **Quick Actions:**
+  - Collect Fee, Add Expense, View Reports
+
+### Fees Management (/accountant/fees)
+
+**Features:**
+1. **Student Fee Table:**
+   - Columns: Student Name, School ID, Class, Fee Type, Total, Paid, Balance, Due Date, Status, Action
+   - Color coded rows based on status
+   
+2. **Filter by:**
+   - Class (dropdown)
+   - Status (All, Paid, Partial, Pending, Overdue)
+   - Month/Year
+   - Fee Type
+   
+3. **Search** by student name or school ID
+
+4. **Collect Fee Button** → Opens modal:
+   - Shows student info and current balance
+   - Amount input (cannot exceed balance)
+   - Payment method: Cash, Bank Transfer, Online, Cheque
+   - Receipt number (auto-generated)
+   - Date (default today)
+   - Notes
+   - Save → updates feeRecord (add to payments array, update paid amount, recalculate balance, update status) → dispatches FEE_CHANGE event
+
+5. **Generate Fee Records:**
+   - "Generate Monthly Fees" button
+   - Select month and year
+   - Select classes (or all)
+   - Enter fee amount per class
+   - Creates feeRecord for every student in selected classes
+
+6. **Create Individual Fee Record:**
+   - Select student
+   - Fee type (monthly, exam, transport, etc.)
+   - Amount
+   - Due date
+
+7. **Payment History:**
+   - Click on a fee record → shows all payments made
+   - Each payment: Amount, Date, Method, Receipt No
+
+8. **Print Receipt** button for each payment
+
+### Expenses Management (/accountant/expenses)
+
+**Features:**
+1. **Expenses Table:**
+   - Date, Category, Description, Amount, Paid To, Payment Method, Receipt No, Action
+   - Sortable by date and amount
+   
+2. **Add Expense Button** → modal:
+   - Date (date picker)
+   - Category dropdown: Salary, Electricity, Water, Maintenance, Supplies, Transport, Events, Other
+   - Amount (number)
+   - Description (textarea)
+   - Paid To (text)
+   - Payment Method: Cash, Bank, Online, Cheque
+   - Receipt Number
+   - Save → creates expense → dispatches event
+
+3. **Edit Expense** → pre-filled modal
+4. **Delete Expense** → confirmation dialog
+
+5. **Filter by:**
+   - Category
+   - Date range
+   - Payment method
+
+6. **Monthly Summary:**
+   - Total expenses per category
+   - Comparison with previous month
+
+### Financial Reports (/accountant/reports)
+
+**Features:**
+1. **Fee Collection Report:**
+   - Monthly fee collection summary
+   - Class-wise collection breakdown
+   - Payment method breakdown (how much by cash, bank, etc.)
+   - List of overdue fees with student details
+
+2. **Expense Report:**
+   - Monthly expense summary
+   - Category-wise breakdown
+   - Comparison with previous months
+
+3. **Profit/Loss Statement:**
+   - Total Income (fees collected)
+   - Total Expenses
+   - Net Balance
+   - Month-over-month trend
+
+4. **Outstanding Dues Report:**
+   - Students with pending fees
+   - Sorted by amount (highest first)
+   - Class-wise breakdown
+
+5. All reports should show data in both summary cards and detailed tables
+
+---
+
+## UI/UX Requirements
+
+1. **Color Scheme:**
+   - Primary: Blue (#2563EB)
+   - Secondary: Purple (#7C3AED)
+   - Success: Green (#10B981)
+   - Warning: Yellow (#F59E0B)
+   - Danger: Red (#EF4444)
+   - Background: Light gray (#F8FAFC)
+
+2. **Design Consistency:**
+   - All pages must use the same DashboardLayout component with sidebar and header
+   - Consistent card styling across all dashboards
+   - Consistent table styling with alternating row colors
+   - All forms must have proper validation with error messages
+   - All delete actions must have confirmation dialogs
+   - Success/error toast notifications for all CRUD operations
+
+3. **Responsive Design:**
+   - Desktop: Full sidebar + content
+   - Tablet: Collapsible sidebar
+   - Mobile: Bottom navigation or hamburger menu
+
+4. **Loading States:**
+   - Show skeleton loaders while fetching data
+   - Show spinner on buttons during API calls
+   - Disable form during submission
+
+5. **Empty States:**
+   - Show meaningful messages when no data exists
+   - Example: "No homework assigned yet. Click 'Create Homework' to get started."
+
+6. **Navigation:**
+   - Sidebar highlights current active page
+   - Breadcrumbs on all inner pages
+   - Back buttons on detail pages
+
+---
+
+## Routing Configuration
+
+```
+/ → Home (public)
+/about → About (public)
+/contact → Contact (public)
+/login → Login (public)
+
+/admin/dashboard → Admin Dashboard (admin only)
+/admin/users → User Management (admin only)
+/admin/classes → Class Management (admin only)
+/admin/teacher-assignment → Teacher Assignment (admin only)
+/admin/settings → Admin Settings (admin only)
+
+/teacher/dashboard → Teacher Dashboard (teacher only)
+/teacher/homework/create → Create Homework (teacher only)
+/teacher/homework → My Homework List (teacher only)
+/teacher/homework/:id → Homework Detail (teacher only)
+/teacher/attendance → Attendance (teacher only)
+/teacher/announcements → Announcements (teacher only)
+
+/student/dashboard → Student Dashboard (student only)
+/student/homework → My Homework (student only)
+/student/homework/:id → Homework Detail (student only)
+/student/announcements → Announcements (student only)
+/student/fee-status → Fee Status (student only)
+
+/principal/dashboard → Principal Dashboard (principal only)
+/principal/classes → All Classes (principal only)
+/principal/teachers → All Teachers (principal only)
+/principal/students → All Students (principal only)
+/principal/announcements → Announcements (principal only)
+/principal/reports → Reports (principal only)
+
+/accountant/dashboard → Accountant Dashboard (accountant only)
+/accountant/fees → Fee Management (accountant only)
+/accountant/expenses → Expense Management (accountant only)
+/accountant/reports → Financial Reports (accountant only)
+
+/* → 404 Not Found
+```
+
+---
+
+## School ID Auto-Generation Logic
+
+```typescript
+function generateSchoolId(role: UserRole, existingUsers: User[]): string {
+  const prefixMap = {
+    admin: 'ADMIN',
+    teacher: 'TCH',
+    student: 'STU',
+    principal: 'PRIN',
+    accountant: 'ACC'
+  };
+  
+  const prefix = prefixMap[role];
+  const usersOfRole = existingUsers.filter(u => u.role === role);
+  const nextNumber = usersOfRole.length + 1;
+  return `${prefix}${String(nextNumber).padStart(3, '0')}`;
+}
+```
+
+---
+
+## Initial Seed Data (db.json must include)
+
+Create these users with proper data:
+
+| Role | Name | School ID | Password |
+|------|------|-----------|----------|
+| Admin | Muhammad Ali | ADMIN001 | admin123 |
+| Principal | Dr. Fatima Khan | PRIN001 | prin123 |
+| Accountant | Ahmed Hassan | ACC001 | acc123 |
+| Teacher | Ayesha Siddiqui | TCH001 | teacher123 |
+| Teacher | Usman Malik | TCH002 | teacher123 |
+| Student | Sara Ahmed | STU001 | student123 |
+| Student | Hassan Ali | STU002 | student123 |
+| Student | Zainab Fatima | STU003 | student123 |
+| Student | Bilal Khan | STU004 | student123 |
+| Student | Maryam Nawaz | STU005 | student123 |
+
+Create these classes:
+- Nursery A, KG A, Prep A, 1st A, 2nd A, 3rd A, 4th A, 5th A, 6th A, 7th A, 8th A
+
+Assign:
+- TCH001 to 5th A (Math, Science)
+- TCH002 to 5th A (English, Urdu)
+- STU001-STU003 to 5th A
+- STU004-STU005 to 6th A
+
+Create sample homework, submissions, fee records, and announcements with realistic data.
+
+---
+
+## package.json Scripts
+
+```json
+{
+  "scripts": {
+    "dev": "vite",
+    "dev:api": "json-server --watch db.json --port 3001",
+    "dev:all": "concurrently \"npm run dev\" \"npm run dev:api\"",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  }
+}
+```
+
+Include all necessary dependencies: react, react-dom, react-router-dom, typescript, tailwindcss, @shadcn/ui components, json-server, concurrently, lucide-react (for icons), date-fns (for date formatting), recharts (for charts).
+
+---
+
+## Critical Implementation Notes
+
+1. **Every API call must handle errors** with try/catch and show error toasts
+2. **Every form must validate inputs** before submission
+3. **Every list must handle empty state** gracefully
+4. **Every delete must confirm** before executing
+5. **Every successful action must show** a toast notification
+6. **All data must come from JSON Server** - no hardcoded data in components
+7. **School IDs must be auto-generated** and displayed to admin after user creation
+8. **Teacher can only see their assigned classes** - filter everything by teacherClasses
+9. **Student can only see homework for their class** - filter by classId
+10. **Real-time events must be dispatched** after every data mutation
+11. **All components must listen** for relevant events and refresh data
+12. **Dates must be formatted** in a readable format (e.g., "March 12, 2025")
+13. **Numbers must be formatted** with commas (e.g., "1,234,567")
+14. **The system must work completely** with just `npm run dev:all`
+
+---
+
+Build the entire application. Generate all files with complete, working code. Do not use placeholders. Do not skip any feature. Every page, every button, every form must be fully functional. The application should be production-quality with proper error handling, loading states, and beautiful UI.
+
+give me full complete code no plcholder etc...

@@ -1,0 +1,204 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id         String   @id @default(uuid())
+  name       String
+  role       String
+  schoolId   String   @unique
+  password   String
+  email      String?
+  phone      String?
+  address    String?
+  classId    String?
+  studentIds String?  // JSON string (array of IDs)
+  subjects   String?  // JSON string
+  profilePic String?
+  status     String   @default("active")
+  createdAt  DateTime @default(now())
+}
+
+model Class {
+  id          String   @id @default(uuid())
+  name        String
+  section     String
+  maxStudents Int      @default(40)
+  createdAt   DateTime @default(now())
+}
+
+model Homework {
+  id          String   @id @default(uuid())
+  title       String
+  subject     String
+  description String
+  classId     String
+  dueDate     String
+  createdBy   String
+  teacherName String
+  attachments String?
+  status      String   @default("active")
+  totalMarks  Int      @default(100)
+  createdAt   DateTime @default(now())
+}
+
+model Submission {
+  id             String   @id @default(uuid())
+  homeworkId     String
+  studentId      String
+  studentName    String
+  submissionText String
+  attachments    String?
+  status         String   @default("pending")
+  marks          Int?
+  totalMarks     Int?
+  feedback       String?
+  checkedAt      String?
+  checkedBy      String?
+  submittedAt    DateTime @default(now())
+}
+
+model TeacherClass {
+  id        String @id @default(uuid())
+  teacherId String
+  classId   String
+  subject   String
+}
+
+model FeeRecord {
+  id               String   @id @default(uuid())
+  studentId        String
+  studentName      String
+  classId          String
+  className        String
+  feeType          String
+  totalFee         Float
+  paid             Float
+  balance          Float
+  dueDate          String
+  status           String
+  month            String
+  year             String
+  concessionAmount Float?
+  concessionType   String?
+  isLeakage        Boolean? @default(false)
+  createdAt        DateTime @default(now())
+  payments         String?  // Store JSON string
+}
+
+model Expense {
+  id            String   @id @default(uuid())
+  date          String
+  category      String
+  amount        Float
+  description   String
+  paidTo        String
+  paymentMethod String
+  receiptNo     String
+  approvedBy    String
+  createdAt     DateTime @default(now())
+}
+
+model Announcement {
+  id             String   @id @default(uuid())
+  title          String
+  message        String
+  type           String
+  priority       String
+  targetRoles    String   // JSON array
+  targetClasses  String   // JSON array
+  createdBy      String
+  createdByName  String
+  createdByRole  String
+  isActive       Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  expiresAt      String
+}
+
+model AttendanceRecord {
+  id        String   @id @default(uuid())
+  classId   String
+  date      String
+  records   String   // JSON string of StudentAttendance[]
+  markedBy  String
+  createdAt DateTime @default(now())
+}
+
+model ExamResult {
+  id         String   @id @default(uuid())
+  studentId  String
+  classId    String
+  session    String
+  exams      String   // JSON string
+  attendance Float
+  rank       String
+  standing   String
+  remarks    String
+  createdAt  DateTime @default(now())
+}
+
+model AdmissionApplication {
+  id             String   @id @default(uuid())
+  studentName    String
+  fatherName     String
+  dateOfBirth    String
+  gender         String
+  previousSchool String
+  gradeAppliedFor String
+  address        String
+  parentPhone    String
+  parentEmail    String
+  status         String
+  submittedAt    DateTime @default(now())
+}
+
+model ContactInquiry {
+  id          String   @id @default(uuid())
+  name        String
+  email       String
+  message     String
+  status      String
+  submittedAt DateTime @default(now())
+}
+
+model NewsItem {
+  id          String   @id @default(uuid())
+  title       String
+  content     String
+  category    String
+  imageUrl    String
+  author      String
+  publishedAt String
+  isActive    Boolean  @default(true)
+}
+
+model InventoryItem {
+  id          String   @id @default(uuid())
+  name        String
+  category    String
+  quantity    Int
+  condition   String
+  location    String
+  assignedTo  String?
+  purchaseDate String
+  cost        Float
+  lastChecked String
+  status      String
+}
+
+model Diary {
+  id          String   @id @default(uuid())
+  title       String
+  subject     String
+  content     String
+  classId     String
+  teacherId   String
+  teacherName String
+  date        String
+  createdAt   DateTime @default(now())
+}
