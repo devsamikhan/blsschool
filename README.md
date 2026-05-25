@@ -8,7 +8,7 @@ A comprehensive, automated Learning Management System featuring an intelligent a
 
 ## How can I run or edit this code locally?
 
-My development workflow is entirely Command-Line (CLI) driven. If you want to work locally using your own terminal and IDE, follow these steps.
+My development workflow is entirely Command-Line (CLI) driven. If you want to work locally using your own terminal and IDE, follow these steps..
 
 The only requirement is having Node.js & npm installed.
 
